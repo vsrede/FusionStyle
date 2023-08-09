@@ -1,8 +1,8 @@
 name: FusionStyle CI CD
 
 on:
-  -push
-  -pull_request
+  - push
+  - pull_request
 
 jobs:
   test:
