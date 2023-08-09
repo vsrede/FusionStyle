@@ -1,0 +1,4 @@
+[tool.black]
+exclude = "venv|migrations|django-debug-toolbar|teachers|venv_correct"
+line-length = 120
+args = ["--check"]
