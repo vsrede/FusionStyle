@@ -1,0 +1,1 @@
+[![FusionStyle CI CD](https://github.com/vsrede/FusionStyle/actions/workflows/django_ci_cd.yml/badge.svg)](https://github.com/vsrede/FusionStyle/actions/workflows/django_ci_cd.yml)
