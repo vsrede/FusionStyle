@@ -9,7 +9,7 @@ def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.development")
     if sys.argv[1].lower() == "test":
         print("NOTE: Running black formatter.")
-        print(os.popen("black --config .black.toml --check .").read())
+        print(os.popen("black --config .black.toml .").read())
         print(os.popen("isort .").read())
     try:
         from django.core.management import execute_from_command_line
