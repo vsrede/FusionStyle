@@ -1,10 +1,9 @@
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.db import models
-from django.utils import timezone
-
 # from main.managers import CustomerManager
 # from main.utils.validators import first_name_validator
 from django.contrib.auth.models import PermissionsMixin
+from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
