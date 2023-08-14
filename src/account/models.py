@@ -5,20 +5,30 @@ from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from account.managers import CustomerManager
 
 
 class Customer(AbstractBaseUser, PermissionsMixin):
+    class CURRENCY_VALUES(models.IntegerChoices):
+        UAH = 0, "UAH"
+        USD = 1, "USD"
+        EURO = 2, "EURO"
+
     first_name = models.CharField(_("first name"), max_length=150, blank=True)
     last_name = models.CharField(_("last name"), max_length=150, blank=True)
     email = models.EmailField(_("email address"), unique=True, error_messages="A user with that email already exists.")
     avatar = models.ImageField(upload_to="customer/avatar_customer/", null=True, blank=True)
-    phone_number = PhoneNumberField(blank=True, null=True, help_text="+1234567890")
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
     birth_date = models.DateField(_("birth_day"), blank=True, null=True)
-    city = models.CharField(_("city"), max_length=150, blank=True)
+    phone_number = PhoneNumberField(blank=True, null=True, help_text="+1234567890")
+    address = models.CharField(max_length=50, blank=True, null=True, help_text="Maidan Nezalezhnosti 1")
+    city = models.CharField(max_length=60, blank=True, null=True, help_text="	Kyiv")
+    zipcode = models.CharField(max_length=5, blank=True, null=True, help_text="02000")
+    country = CountryField(max_length=5, blank=True, null=True, help_text="").formfield()
+    preferred_currency = models.PositiveSmallIntegerField(choices=CURRENCY_VALUES.choices, default=CURRENCY_VALUES.UAH)
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,

@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "phonenumber_field",
     "django_countries",
-    'django_extensions',
+    "django_extensions",
     "account",
     "shop",
     "core",
