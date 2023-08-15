@@ -4,7 +4,7 @@ DEBUG = True
 
 SECRET_KEY = "django-secret-key"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 DATABASES = {
     "default": {
