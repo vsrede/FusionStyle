@@ -1,8 +1,8 @@
-
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from account.forms import UserRegistrationForm
+from core.services.emails import send_registration_email
 
 
 class UserRegistrationView(CreateView):
