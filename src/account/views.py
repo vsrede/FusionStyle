@@ -1,12 +1,17 @@
+from django.contrib.auth.views import LogoutView, LoginView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
-
+from django.views.generic import CreateView, RedirectView
+from django.contrib.auth import login, get_user_model
 from account.forms import UserRegistrationForm
 from core.services.emails import send_registration_email
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.shortcuts import render
+from core.utils.token_generator import TokenGenerator
 
 
 class UserRegistrationView(CreateView):
-    template_name = "user_create.html"
+    template_name = "create_account.html"
     form_class = UserRegistrationForm
     success_url = reverse_lazy("index")
 
@@ -21,3 +26,31 @@ class UserRegistrationView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+
+class AccountActivateView(RedirectView):
+    url = reverse_lazy("index")
+    template_name = "emails/wrong_data.html"
+
+    def get(self, request, uuid64, token, *args, **kwargs):
+        try:
+            pk = force_str(urlsafe_base64_decode(uuid64))
+            current_user = get_user_model().objects.get(pk=pk)
+        except (get_user_model().DoesNotExist, TypeError, ValueError):
+            return render(request, self.template_name)
+
+        if current_user and TokenGenerator().check_token(current_user, token):
+            current_user.is_active = True
+            current_user.save()
+            login(request, current_user, backend="django.contrib.auth.backends.ModelBackend")
+
+            return super().get(request, *args, **kwargs)
+        return render(request, self.template_name)
+
+
+class AccountLogoutView(LogoutView):
+    ...
+
+
+class AccountLoginView(LoginView):
+    template_name = "login.html"
