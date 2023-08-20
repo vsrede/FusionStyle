@@ -1,8 +1,8 @@
+from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
 
 from core.views import IndexView, PageNotFondView
-from django.conf.urls import include
 
 urlpatterns = [
     path("admin/", admin.site.urls),

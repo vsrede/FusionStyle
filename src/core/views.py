@@ -9,5 +9,3 @@ class IndexView(TemplateView):
 class PageNotFondView(TemplateView):
     template_name = "404.html"
     http_method_names = ["get"]
-
-

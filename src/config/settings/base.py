@@ -147,4 +147,3 @@ LOGOUT_REDIRECT_URL = "index"
 # lmsl44224@gmail.com
 # http://127.0.0.1:8000/
 # pkjubgdubiyteexm
-

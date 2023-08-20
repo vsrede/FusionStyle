@@ -1,12 +1,13 @@
-from django.contrib.auth.views import LogoutView, LoginView
+from django.contrib.auth import get_user_model, login
+from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, RedirectView
-from django.contrib.auth import login, get_user_model
-from account.forms import UserRegistrationForm
-from core.services.emails import send_registration_email
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-from django.shortcuts import render
+from django.views.generic import CreateView, RedirectView
+
+from account.forms import UserRegistrationForm
+from core.services.emails import send_registration_email
 from core.utils.token_generator import TokenGenerator
 
 
