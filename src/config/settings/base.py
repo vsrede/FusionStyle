@@ -29,9 +29,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "social_django",
     "phonenumber_field",
     "django_countries",
     "django_extensions",
+    "crispy_forms",
+    "crispy_bootstrap5",
     "account",
     "shop",
     "core",
@@ -45,11 +48,26 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
+
+AUTHENTICATION_BACKENDS = (
+    "social_core.backends.google.GoogleOAuth2",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
+SOCIAL_AUTH_URL_NAMESPACE = "social"
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "237554627314-1sv9gmusm0iajsfad8ekoa1s36nihen8.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 
 ROOT_URLCONF = "config.urls"
 
 AUTH_USER_MODEL = "account.Customer"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 TEMPLATES = [
     {
@@ -110,3 +128,22 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+STATIC_URL = "static/"
+STATICFILES_DIRS = (BASE_DIR / "static",)
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "lmsl44224@gmail.com"
+EMAIL_HOST_PASSWORD = "pkjubgdubiyteexm"
+EMAIL_PORT = 587
+EMAIL_FAIL_SILENTLY = False
+EMAIL_REGISTRATION_SUBJECT = "Activate your LMS account"
+
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "index"
+
+# lmsl44224@gmail.com
+# http://127.0.0.1:8000/
+# pkjubgdubiyteexm
