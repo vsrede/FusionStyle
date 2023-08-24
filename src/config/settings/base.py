@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "crispy_forms",
     "crispy_bootstrap5",
+    "rest_framework",
+    "drf_yasg",
     "account",
     "shop",
     "core",

@@ -19,7 +19,9 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
     first_name = models.CharField(_("first name"), max_length=150, blank=True)
     last_name = models.CharField(_("last name"), max_length=150, blank=True)
-    email = models.EmailField(_("email address"), unique=True, error_messages="A user with that email already exists.")
+    email = models.EmailField(
+        _("email address"), unique=True, error_messages={"unique": _("A user with that email already exists.")}
+    )
     avatar = models.ImageField(upload_to="customer/avatar_customer/", null=True, blank=True)
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
     birth_date = models.DateField(_("birth_day"), blank=True, null=True)
