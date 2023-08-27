@@ -27,7 +27,7 @@ def sample_product(
         brand = sample_brand()
 
     return Product.objects.create(
-        name=name, title=title, description=description, price=price, stock=stock, category=category, brand=brand
+        name=name, description=description, title=title, price=price, stock=stock, category=category, brand=brand
     )
 
 

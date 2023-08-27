@@ -38,7 +38,7 @@ class TestShopModel(TestCase):
         product = sample_product(category=category, brand=brand)
         self.assertEqual(
             str(product),
-            f"{product.name}, title: {product.title},  description: {product.description}price: {product.price}",
+            f"{product.name}, title: {product.title}, description: {product.description}, price: {product.price}",
         )
 
     def test_order_creation(self):
