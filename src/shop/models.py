@@ -16,7 +16,7 @@ class Product(BaseModel):
     brand = models.ForeignKey("Brand", on_delete=models.CASCADE, related_name="brand")
 
     def __str__(self):
-        return f"{self.name}, title: {self.title},  description: {self.description}" f"price: {self.price}"
+        return f"{self.name}, title: {self.title}, description: {self.description}, price: {self.price}"
 
 
 class Category(models.Model):

@@ -1,12 +1,14 @@
 from django.contrib.auth import get_user_model
 from rest_framework.generics import (CreateAPIView, ListAPIView,
-                                     RetrieveDestroyAPIView,
+                                     RetrieveAPIView, RetrieveDestroyAPIView,
                                      RetrieveUpdateAPIView)
+from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from api.serializers import (BrandSerializer, CustomerSerializer,
                              OrderCreateSerializer, OrderSerializer,
                              ProductSerializer)
+from core.permissions import IsSuperUser
 from shop.models import Brand, Order, Product
 
 
@@ -16,11 +18,21 @@ class CustomerViewSet(ModelViewSet):
 
 
 class ProductListView(ListAPIView):
+    permission_classes = [AllowAny]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
+class ProductDetailView(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects.filter(pk=self.kwargs["pk"])
+
+
 class ProductOrdersListView(ListAPIView):
+    permission_classes = [IsSuperUser]
     serializer_class = OrderSerializer
 
     def get_queryset(self):
