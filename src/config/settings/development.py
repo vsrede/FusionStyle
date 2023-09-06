@@ -16,7 +16,7 @@ if os.environ.get("GITHUB_WORKFLOW"):
             "USER": "postgres",
             "PASSWORD": "postgres",
             "HOST": "0.0.0.0",
-            "PORT": 5432
+            "PORT": 5432,
         },
     }
 else:
@@ -35,7 +35,7 @@ else:
             "USER": os.environ.get("POSTGRES_USER"),
             "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
             "HOST": os.environ.get("POSTGRES_HOST"),
-            "PORT": os.environ.get("POSTGRES_PORT")
+            "PORT": os.environ.get("POSTGRES_PORT"),
         },
         # "default": {
         #     "ENGINE": "django.db.backends.sqlite3",

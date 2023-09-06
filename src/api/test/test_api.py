@@ -33,11 +33,11 @@ class TestAPI(APITestCase):
             result.data,
             {
                 "name": "Test Product",
+                "title": "Sample Product Title",
+                "description": "Sample Product Description",
                 "price": "100.00",
                 "category": 1,
                 "brand": 1,
-                "title": "Sample Product Title",
-                "description": "Sample Product Description",
             },
         )
 
