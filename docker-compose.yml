@@ -29,16 +29,12 @@ services:
   mongo:
     image: mongo:latest
     container_name: mongo_container
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=examplepassword
-      - MONGO_INITDB_DATABASE=mydatabase
-      - MONGO_INITDB_USERNAME=myuser
-      - MONGO_INITDB_PASSWORD=mypassword
     ports:
       - 27017:27017
     volumes:
       - ./mongodb_data:/data/db
+    env_file:
+      - .env
 
 
   pgadmin:

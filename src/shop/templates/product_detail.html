@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
+            </div>
+            <div class="card-body">
+                {% if product.image %}
+                <p><img src="{{ product.image.url }}" alt="Avatar" style="max-height: 50px"></p>
+                {% else %}
+                <p>No image</p>
+                {% endif %}
+                <p>Description: {{ product.description }}</p>
+                <p>Price: {{ product.price }}</p>
+                <p>Brand: {{ product.brand }}</p>
+                {% if product.stock %}
+                    <p>Stock: {{ product.stock }}</p>
+                {% else %}
+                    <p>Stock: No information</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -11,6 +11,7 @@ urlpatterns = [
     path("oauth/", include("social_django.urls", namespace="social")),
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include("api.urls")),
+    path("shop/", include("shop.urls")),
 ]
 handler404 = PageNotFondView.as_view()
 

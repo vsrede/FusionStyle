@@ -9,7 +9,7 @@ class Product(BaseModel):
     name = models.CharField(max_length=100)
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    image = models.ImageField(upload_to="shop/product/", null=True, blank=True)
+    image = models.ImageField(upload_to="static/shop/product/", null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField(default=0)
     category = models.ForeignKey("Category", on_delete=models.CASCADE, related_name="category")
@@ -34,7 +34,7 @@ class Brand(models.Model):
     logo = models.ImageField(upload_to="shop/brand/", null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name}, country: {self.country},  description: {self.description}"
+        return f"{self.name}, country: {self.country}"
 
 
 class Order(BaseModel):
