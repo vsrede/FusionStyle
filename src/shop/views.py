@@ -3,11 +3,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import (DetailView, ListView, RedirectView,
-                                  TemplateView, CreateView)
+from django.views.generic import (CreateView, DetailView, ListView,
+                                  RedirectView, TemplateView)
 
 from shop.forms import OrderForm
-from shop.models import Cart, CartItem, Category, Product, Order
+from shop.models import Cart, CartItem, Category, Order, Product
 
 
 class ProductListView(ListView):
