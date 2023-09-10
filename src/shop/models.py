@@ -48,8 +48,8 @@ class Order(BaseModel):
     products = models.ManyToManyField(Product, related_name="order")
     delivery_address = models.TextField(max_length=255, null=True, blank=True)
 
-    def total_price(self):
-        return sum(item.product.price * item.quantity for item in self.products.all())
+    # def total_price(self):
+    #     return sum(item.product.price * item.quantity for item in self.products.all())
 
     def __str__(self):
         return f"Order for {self.customer} - {self.get_status_display()}"
@@ -60,7 +60,13 @@ class Cart(models.Model):
     products = models.ManyToManyField(Product, related_name="cart")
 
     def total_price(self):
-        return sum(item.price for item in self.products.all())
+        return sum(item.product.price * item.quantity for item in self.cart_items.all())
 
     def total_items(self):
-        return self.products.count()
+        return sum(item.quantity for item in self.cart_items.all())
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)

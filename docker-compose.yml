@@ -8,10 +8,12 @@ services:
     ports:
       - 8010:8010
     command:
-      - ./commands/start_server_dev.sh
+      - ./commands/start_server_${MODE}.sh
     volumes:
       - ./src:/fusionstyle/src
       - ./commands:/fusionstyle/commands
+      - static_content:/fusionstyle/src/static
+      - media_content:/fusionstyle/src/media
     env_file:
       - .env
     depends_on:
@@ -26,17 +28,6 @@ services:
     env_file:
       - .env
 
-  mongo:
-    image: mongo:latest
-    container_name: mongo_container
-    ports:
-      - 27017:27017
-    volumes:
-      - ./mongodb_data:/data/db
-    env_file:
-      - .env
-
-
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin_container
@@ -50,8 +41,48 @@ services:
     depends_on:
       - postgres
 
+  nginx:
+    image: nginx:1.19
+    volumes:
+      - static_content:/fusionstyle/src/static
+      - media_content:/fusionstyle/src/media
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - 80:80
+      - 443:443
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+#  mongodb:
+#    image: mongo:3-stretch
+#    container_name: mongo_db_container
+#    command: [ "--bind_ip_all", "--smallfiles" ]
+#    ports:
+#      - 27017:27017
+#    volumes:
+#      - mongo_data:/data/db
+#    env_file:
+#      - .env
+#    restart: on-failure
+#
+#  mongoadmin:
+#    image: mongo-express
+#    restart: on-failure
+#    container_name: mongo_admin_container
+#    ports:
+#      - 8091:8081
+#    env_file:
+#      - .env
+#    links:
+#      - mongodb
+#    depends_on:
+#      - mongodb
 
 volumes:
+  static_content: { }
+  media_content: { }
   pg_data: { }
   pgadmin_data: { }
-  mongodb_data: { }
+#  mongo_data: { }

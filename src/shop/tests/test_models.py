@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from shop.models import Brand, Cart, Category, Order, Product
+from shop.models import Brand, Cart, CartItem, Category, Order, Product
 from utils.samples import (sample_brand, sample_cart, sample_category,
                            sample_customer, sample_order, sample_product)
 
@@ -56,11 +56,14 @@ class TestShopModel(TestCase):
     def test_cart_creation_count_items(self):
         customer = sample_customer()
         product = sample_product()
-        cart = sample_cart(customer=customer, products=[product])
+        cart = sample_cart(customer=customer)
+        cart_item = CartItem.objects.create(cart=cart, product=product, quantity=1)  # NOQA
         self.assertEqual(cart.total_items(), 1)
 
     def test_cart_creation_count_price(self):
         customer = sample_customer()
         product = sample_product()
-        cart = sample_cart(customer=customer, products=[product])
+        cart = sample_cart(customer=customer)
+        # NOQA
+        cart_item = CartItem.objects.create(cart=cart, product=product, quantity=1)  # NOQA
         self.assertEqual(cart.total_price(), product.price)
