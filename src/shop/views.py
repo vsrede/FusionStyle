@@ -1,13 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.views import View
 from django.views.generic import (CreateView, DetailView, ListView,
                                   RedirectView, TemplateView)
 
-from shop.forms import OrderForm
-from shop.models import Cart, CartItem, Category, Order, Product
+from shop.models import Cart, CartItem, Category, Product
+from shop.tasks import generate_product_brand_category
 
 
 class ProductListView(ListView):
@@ -19,9 +19,11 @@ class ProductListView(ListView):
         product_category = self.kwargs.get("category")
         if product_category:
             category = get_object_or_404(Category, name=product_category)
-            return Product.objects.filter(category=category)
+            queryset = Product.objects.filter(category=category)
         else:
-            return Product.objects.all()
+            queryset = Product.objects.all()
+
+        return queryset
 
 
 class ProductDetailView(DetailView):
@@ -96,3 +98,8 @@ class RemoveFromCartView(LoginRequiredMixin, View):
 
 class CreateOrderView(LoginRequiredMixin, CreateView):
     ...
+
+
+def generate_instances_view(request):
+    generate_product_brand_category.delay()
+    return HttpResponse("Task generate instances is started")
