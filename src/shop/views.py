@@ -17,13 +17,16 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         product_category = self.kwargs.get("category")
-        if product_category:
-            category = get_object_or_404(Category, name=product_category)
-            queryset = Product.objects.filter(category=category)
-        else:
-            queryset = Product.objects.all()
-
+        category = get_object_or_404(Category, name=product_category)
+        queryset = Product.objects.filter(category=category)
         return queryset
+
+
+class ProductAllListView(ListView):
+    model = Product
+    template_name = "products_list.html"
+    context_object_name = "products"
+    queryset = Product.objects.all()
 
 
 class ProductDetailView(DetailView):
