@@ -64,20 +64,31 @@ services:
     depends_on:
       - backend
 
-  #  celery:
-  #    build: ./
-  #    container_name: celery-container
-  #    command:
-  #      - ./commands/start_celery.sh
-  #    restart: on-failure
-  #    volumes:
-  #      - ./src:/fusionstyle
-  #      - ./commands:/fusionstyle/commands
-  #    env_file:
-  #      - .env
-  #    depends_on:
-  #      - redis
-  #      - backend
+
+  celery-flower:
+    build: ./
+    command:
+      - ./commands/start_celery_flower.sh
+    restart: always
+    volumes:
+      - ./src:/fusionstyle
+      - ./commands:/fusionstyle/commands
+    ports:
+      - 5556:5555
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - backend
+
+  redisadmin:
+    image: rediscommander/redis-commander:latest
+    container_name: redisadmin
+    hostname: redisadmin
+    restart: on-failure
+    ports:
+      - 8092:8081
+    env_file: .env
 
   celerybeat:
     build: ./
@@ -94,83 +105,8 @@ services:
       - redis
       - backend
 
-  celery-flower:
-    build: ./
-    command:
-      - ./commands/start_celery_flower.sh
-    restart: always
-    volumes:
-      - ./src:/my_market
-      - ./commands:/fusionstyle/commands
-    ports:
-      - 5556:5555
-    env_file:
-      - .env
-    depends_on:
-      - redis
-      - backend
-
-
-  #  flower:
-  #    build: ./
-  #    container_name: flower-container
-  #    volumes:
-  #      - ./src:/fusionstyle
-  #    env_file:
-  #      - .env
-  #    command:
-  #      - ./commands/start_celery_flower.sh
-  #    ports:
-  #      - 5556:5555
-  #    depends_on:
-  #      - celery
-
-  redisadmin:
-    image: rediscommander/redis-commander:latest
-    container_name: redisadmin
-    hostname: redisadmin
-    restart: on-failure
-    ports:
-      - 8092:8081
-    env_file: .env
-
-#  redisadmin:
-#    image: redislabs/redisinsight
-#    container_name: redisadmin
-#    restart: on-failure
-#    ports:
-#      - 8001:8001
-#    env_file: .env
-
-
-#  mongodb:
-#    image: mongo:3-stretch
-#    container_name: mongo_db_container
-#    command: [ "--bind_ip_all", "--smallfiles" ]
-#    ports:
-#      - 27017:27017
-#    volumes:
-#      - mongo_data:/data/db
-#    env_file:
-#      - .env
-#    restart: on-failure
-#
-#  mongoadmin:
-#    image: mongo-express
-#    restart: on-failure
-#    container_name: mongo_admin_container
-#    ports:
-#      - 8091:8081
-#    env_file:
-#      - .env
-#    links:
-#      - mongodb
-#    depends_on:
-#      - mongodb
-
 volumes:
   static_content: { }
   media_content: { }
   pg_data: { }
   pgadmin_data: { }
-#  mongo_data: { }
