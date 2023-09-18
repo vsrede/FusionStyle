@@ -1,5 +1,8 @@
+import random
+
 from django.db import models
 from django_countries.fields import CountryField
+from faker import Faker
 
 from account.models import Customer
 from core.models import BaseModel
@@ -18,6 +21,23 @@ class Product(BaseModel):
     def __str__(self):
         return f"{self.name}, title: {self.title}, description: {self.description}, price: {self.price}"
 
+    @classmethod
+    def generate_instances(cls, count=10):
+        faker = Faker()
+        category_count = Category.objects.count()
+        brand_count = Brand.objects.count()
+
+        for _ in range(count):
+            cls.objects.create(
+                name=faker.word(),
+                title=faker.sentence(),
+                description=faker.paragraph(nb_sentences=2),
+                price=random.randint(50, 10000),
+                stock=random.randint(0, 100),
+                category=Category.objects.all()[random.randint(0, category_count - 1)],
+                brand=Brand.objects.all()[random.randint(0, brand_count - 1)],
+            )
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -26,15 +46,34 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def generate_instances(cls, count=10):
+        faker = Faker()
+        for _ in range(count):
+            cls.objects.create(
+                name=faker.word(),
+                description=faker.paragraph(nb_sentences=1),
+            )
+
 
 class Brand(models.Model):
     name = models.CharField(max_length=100)
-    country = CountryField()
+    country = CountryField(max_length=100)
     description = models.TextField(max_length=255)
     logo = models.ImageField(upload_to="shop/brand/", null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}, country: {self.country}"
+
+    @classmethod
+    def generate_instances(cls, count=10):
+        faker = Faker()
+        for _ in range(count):
+            cls.objects.create(
+                name=faker.word(),
+                country=faker.country_code(),
+                description=faker.paragraph(nb_sentences=1),
+            )
 
 
 class Order(BaseModel):
@@ -47,9 +86,6 @@ class Order(BaseModel):
     status = models.PositiveSmallIntegerField(choices=ORDER_STATUS.choices, default=ORDER_STATUS.ORDER_IN_PROCESSING)
     products = models.ManyToManyField(Product, related_name="order")
     delivery_address = models.TextField(max_length=255, null=True, blank=True)
-
-    # def total_price(self):
-    #     return sum(item.product.price * item.quantity for item in self.products.all())
 
     def __str__(self):
         return f"Order for {self.customer} - {self.get_status_display()}"
