@@ -1,6 +1,4 @@
 from django.contrib.auth.base_user import AbstractBaseUser
-# from main.managers import CustomerManager
-# from main.utils.validators import first_name_validator
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone

@@ -34,6 +34,8 @@
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Remove</button>
                         </form>
+
+
                     </div>
                 </td>
             </tr>
@@ -43,16 +45,19 @@
             </tr>
             {% endfor %}
             <tr>
-              <td><strong>Summary</strong></td>
-              <td><strong>${{ total_price }}</td>
-              <td><strong>{{ total_items }}</td>
-              <td></td>
+                <td><strong>Summary</strong></td>
+                <td><strong>${{ total_price }}</td>
+                <td><strong>{{ total_items }}</td>
+                <td></td>
             </tr>
             </tbody>
         </table>
     </div>
     <div class="text-center">
-        <a href="{% url 'shop:create_order' %}" class="btn btn-success">Proceed to Checkout</a>
+        {% if cart_items %}
+            <a href="{% url 'shop:create_order' %}" class="btn btn-success">Proceed to Checkout</a>
+        {% endif %}
+        <a type="button" class="btn btn-secondary" href="{% url 'index' %}">Back to shopping</a>
     </div>
 </div>
 {% endblock %}

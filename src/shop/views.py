@@ -1,12 +1,16 @@
+import pprint
+
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import (CreateView, DetailView, ListView,
                                   RedirectView, TemplateView)
 
-from shop.models import Cart, CartItem, Category, Product
+from shop.forms import OrderForm
+from shop.models import Cart, CartItem, Category, Order, Product
 from shop.tasks import generate_product_brand_category
 
 
@@ -100,7 +104,49 @@ class RemoveFromCartView(LoginRequiredMixin, View):
 
 
 class CreateOrderView(LoginRequiredMixin, CreateView):
-    ...
+    template_name = "create_order.html"
+    form_class = OrderForm
+    success_url = reverse_lazy("index")
+    login_url = "index"
+
+    def form_valid(self, form):
+        current_user = self.request.user
+        form.instance.customer = current_user
+
+        # Сначала сохраните заказ в базе данных, чтобы получить значение "id"
+        response = super().form_valid(form)
+
+        # Затем получите продукты из корзины пользователя и добавьте их в заказ
+        cart_items = current_user.cart.cart_items.all()
+        self.object.products.set([item.product for item in cart_items])
+
+        # Очистите корзину пользователя
+        cart_items.delete()
+        return response
+
+
+class OrdersListView(LoginRequiredMixin, ListView):
+    template_name = "orders_list.html"
+    context_object_name = "orders"
+    login_url = "index"
+
+    def get_queryset(self):
+        user = get_object_or_404(get_user_model(), pk=self.kwargs.get("pk"))
+        queryset = user.order_set.all()
+        return queryset
+
+
+class OrderDetailListView(LoginRequiredMixin, ListView):
+    template_name = "order_detail_list.html"
+    context_object_name = "products"
+    login_url = "index"
+
+    def get_queryset(self):
+        order = get_object_or_404(Order, id=self.kwargs.get("order_id"))
+        products = order.products.all()
+        print(self.kwargs.get("order_id"))
+        print(order.delivery_address)
+        return products
 
 
 def generate_instances_view(request):
