@@ -103,8 +103,8 @@ class Order(BaseModel):
     status = models.PositiveSmallIntegerField(choices=ORDER_STATUS.choices, default=ORDER_STATUS.ORDER_IN_PROCESSING)
     products = models.ManyToManyField(Product, related_name="order")
     delivery_address = models.TextField(max_length=100, null=True, blank=True)
-    delivery_first_name = models.CharField(max_length=50)
-    delivery_last_name = models.CharField(max_length=50)
+    delivery_first_name = models.CharField(max_length=50, null=False)
+    delivery_last_name = models.CharField(max_length=50, null=False)
     cart = models.ForeignKey(Cart, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
