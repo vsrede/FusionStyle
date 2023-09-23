@@ -42,6 +42,6 @@ else:
 
 STATIC_ROOT = BASE_DIR / "static/"  # NOQA
 STATIC_URL = "/static/"
-
+# STATICFILES_DIRS = (BASE_DIR / "static",)
 MEDIA_ROOT = BASE_DIR / "media/"  # NOQA
 MEDIA_URL = "/media/"

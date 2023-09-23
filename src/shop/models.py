@@ -76,21 +76,6 @@ class Brand(models.Model):
             )
 
 
-class Order(BaseModel):
-    class ORDER_STATUS(models.IntegerChoices):
-        ORDER_IN_PROCESSING = 0, "Order is processing"
-        PENDING = 1, "Pending"
-        COMPLETED = 2, "Completed"
-
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    status = models.PositiveSmallIntegerField(choices=ORDER_STATUS.choices, default=ORDER_STATUS.ORDER_IN_PROCESSING)
-    products = models.ManyToManyField(Product, related_name="order")
-    delivery_address = models.TextField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return f"Order for {self.customer} - {self.get_status_display()}"
-
-
 class Cart(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product, related_name="cart")
@@ -106,3 +91,21 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+
+
+class Order(BaseModel):
+    class ORDER_STATUS(models.IntegerChoices):
+        ORDER_IN_PROCESSING = 0, "Order is processing"
+        PENDING = 1, "Pending"
+        COMPLETED = 2, "Completed"
+
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    status = models.PositiveSmallIntegerField(choices=ORDER_STATUS.choices, default=ORDER_STATUS.ORDER_IN_PROCESSING)
+    products = models.ManyToManyField(Product, related_name="order")
+    delivery_address = models.TextField(max_length=100, null=True, blank=True)
+    delivery_first_name = models.CharField(max_length=50)
+    delivery_last_name = models.CharField(max_length=50)
+    cart = models.ForeignKey(Cart, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"Order for {self.customer} - {self.get_status_display()}"

@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="table-responsive mx-auto" style="width: 40%">
+    {% if orders %}
+    <h2>Orders</h2>
+     {% else %}
+        <h2>No Orders</h2>
+        {% endif %}
+    <div class="table-responsive">
+        {% if orders %}
+        <table class="table table-bordered">
+            <tr style="">
+                <th scope="col">Delivery address</th>
+                <th scope="col">Delivery first name</th>
+                <th scope="col">Delivery last name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Products</th>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.delivery_address }}</td>
+                <td>{{ order.delivery_first_name }}</td>
+                <td>{{ order.delivery_last_name }}</td>
+                <td>{{ order.get_status_display }}</td>
+                <td><a type="button" class="btn btn-success" href="{% url 'shop:orders-detail-list' order.id %}">Get</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

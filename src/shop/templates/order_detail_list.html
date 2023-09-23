@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="table-responsive mx-auto" style="width: 80%">
+    <h2>Order Details</h2>
+    <div class="table-responsive">
+        {% if products %}
+        <table class="table table-bordered">
+            <tr style="">
+                <th scope="col">Product Name</th>
+                <th scope="col">Product Price</th>
+                <th scope="col">Product Category</th>
+                <th scope="col">Product Brand</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>${{ product.price }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>{{ product.brand.name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <h1 style="margin: 20px">No products in this order</h1>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

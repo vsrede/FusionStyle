@@ -1,9 +1,9 @@
-from django.forms import ModelForm
+from django import forms
 
 from shop.models import Order
 
 
-class OrderForm(ModelForm):
+class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ["customer", "status", "products"]
+        fields = ["delivery_address", "delivery_first_name", "delivery_last_name"]

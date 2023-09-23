@@ -11,7 +11,7 @@
                 {% if product.image %}
                 <p><img src="{{ product.image.url }}" alt="Avatar" height="100"></p>
                 {% else %}
-                <p><img src="{% static 'images/default.jpg' %}" alt="" height="100"></p>
+                <p><img src="{% static 'images/noimage.jpg' %}" alt="" height="100"></p>
                 {% endif %}
                 <p>Description: {{ product.description }}</p>
                 <p>Price: {{ product.price }}</p>
