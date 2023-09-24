@@ -3,22 +3,29 @@
 {% block content %}
 
 <div class="container">
+
     <form method="GET" class="form-inline mb-4">
         <div class="form-group mx-2">
             {{ form.search }}
+        </div>
+        <div class="form-group mx-2">
+            {{ form.category }}
         </div>
         <div class="form-group mx-2">
             {{ form.brand }}
         </div>
         <button type="submit" class="btn btn-primary">Search by filter</button>
     </form>
+
     <div class="mb-3">
         <strong>Sort by:</strong>
-        <a href="{% url 'shop:products_list_price_asc' %}?sort_by=price_asc" class="btn btn-link">Price Low to
+        <a href="{% url 'shop:products_list_all_price_asc' %}?sort_by=price_asc" class="btn btn-link">Price Low to
             High</a>
-        <a href="{% url 'shop:products_list_price_desc' %}?sort_by=price_desc" class="btn btn-link">Price High to
+        <a href="{% url 'shop:products_list_all_price_desc' %}?sort_by=price_desc" class="btn btn-link">Price High to
             Low</a>
     </div>
+
+
     <div class="row">
         {% for product in products %}
         <div class="col-md-4">

@@ -40,8 +40,8 @@ else:
         # }
     }
 
-STATIC_ROOT = BASE_DIR / "static/"  # NOQA
+# STATIC_ROOT = BASE_DIR / "static/"  # NOQA
 STATIC_URL = "/static/"
-# STATICFILES_DIRS = (BASE_DIR / "static",)
+STATICFILES_DIRS = (BASE_DIR / "static",)  # NOQA
 MEDIA_ROOT = BASE_DIR / "media/"  # NOQA
 MEDIA_URL = "/media/"

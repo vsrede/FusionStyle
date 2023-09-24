@@ -9,9 +9,11 @@ from django.views import View
 from django.views.generic import (CreateView, DetailView, ListView,
                                   RedirectView, TemplateView)
 
-from shop.forms import OrderForm
+from shop.forms import (OrderForm, ProductFilterForm,
+                        ProductFilterWithCategoryForm)
 from shop.models import Cart, CartItem, Category, Order, Product
 from shop.tasks import generate_product_brand_category
+from shop.utils.sort_queryset_by_price import sort_queryset_by_price
 
 
 class ProductListView(ListView):
@@ -23,14 +25,59 @@ class ProductListView(ListView):
         product_category = self.kwargs.get("category")
         category = get_object_or_404(Category, name=product_category)
         queryset = Product.objects.filter(category=category)
+        form = ProductFilterForm(self.request.GET)
+        if form.is_valid():
+            search = form.cleaned_data.get("search")
+            brand = form.cleaned_data.get("brand")
+
+            if search:
+                queryset = queryset.filter(name__icontains=search)
+
+            if brand:
+                queryset = queryset.filter(brand=brand)
+        sort_by = self.request.GET.get("sort_by")
+        queryset = sort_queryset_by_price(queryset, sort_by)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = ProductFilterWithCategoryForm(self.request.GET)
+        return context
 
 
 class ProductAllListView(ListView):
     model = Product
-    template_name = "products_list.html"
+    template_name = "products_all_list.html"
     context_object_name = "products"
     queryset = Product.objects.all()
+    ordering = "-price"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = ProductFilterWithCategoryForm(self.request.GET)
+
+        if form.is_valid():
+            search = form.cleaned_data.get("search")
+            category = form.cleaned_data.get("category")
+            brand = form.cleaned_data.get("brand")
+
+            if search:
+                queryset = queryset.filter(name__icontains=search)
+
+            if category:
+                queryset = queryset.filter(category=category)
+
+            if brand:
+                queryset = queryset.filter(brand=brand)
+
+        sort_by = self.request.GET.get("sort_by")
+        queryset = sort_queryset_by_price(queryset, sort_by)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = ProductFilterWithCategoryForm(self.request.GET)
+        return context
 
 
 class ProductDetailView(DetailView):
