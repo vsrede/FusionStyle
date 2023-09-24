@@ -6,7 +6,7 @@ DEBUG = False
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "ec2-16-170-238-29.eu-north-1.compute.amazonaws.com"]
 
 DATABASES = {
     # "default": {
