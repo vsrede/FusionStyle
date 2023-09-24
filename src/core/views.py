@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
 
-# Create your views here.
+
+class IndexView(TemplateView):
+    template_name = "index.html"
+    http_method_names = ["get"]
+
+
+class PageNotFondView(TemplateView):
+    template_name = "404.html"
+    http_method_names = ["get"]

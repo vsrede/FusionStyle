@@ -1,16 +1,30 @@
+import os
+
 from config.settings.base import *  # NOQA
 
 DEBUG = False
 
-SECRET_KEY = "django-insecure-56s@6_c#(vnnq$ex9g03@bui)!s&^mr7@gt&jrem=&i)zbll9s"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "ec2-16-170-238-29.eu-north-1.compute.amazonaws.com"]
 
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql",
+    #     "NAME": os.environ.get("POSTGRES_DB"),
+    #     "USER": os.environ.get("POSTGRES_USER"),
+    #     "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+    #     "HOST": os.environ.get("POSTGRES_HOST"),
+    #     "PORT": os.environ.get("POSTGRES_PORT"),
+    # }
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",  # NOQA
     }
 }
 
-STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "static/"  # NOQA
+STATIC_URL = "/static/"
+
+MEDIA_ROOT = BASE_DIR / "media/"  # NOQA
+MEDIA_URL = "/media/"

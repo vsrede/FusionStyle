@@ -1,0 +1,63 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="table-responsive mx-auto" style="width: 40%">
+    <h2>Your Cart</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr style="text-align: center">
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Remove</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>${{ item.product.price }}</td>
+                <td>
+                    <form method="POST" action="{% url 'shop:update-cart' item.product.id %}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="number" name="quantity" value="{{ item.quantity }}" class="form-control">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </td>
+                <td>
+                    <div class="text-center">
+                        <form method="POST" action="{% url 'shop:remove-from-cart' item.product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+
+
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Your cart is empty.</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td><strong>Summary</strong></td>
+                <td><strong>${{ total_price }}</td>
+                <td><strong>{{ total_items }}</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        {% if cart_items %}
+            <a href="{% url 'shop:create_order' %}" class="btn btn-success">Proceed to Checkout</a>
+        {% endif %}
+        <a type="button" class="btn btn-secondary" href="{% url 'index' %}">Back to shopping</a>
+    </div>
+</div>
+{% endblock %}

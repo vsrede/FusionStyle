@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        {% for product in products %}
+
+        <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <a href="{% url 'shop:product_detail' product.id %}" class="btn btn-second">
+                        <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if product.image %}
+                        <p><img src="{{ product.image.url }}" alt="Phone image" height="100"></p>
+                    {% else %}
+                        <p><img src="{% static 'images/no_image.jpg' %}" alt="" height="100"></p>
+                    {% endif %}
+                    <p>{{ product.description }}</p>
+                    <p>{{ product.price }}</p>
+                    <p>{{ product.brand }}</p>
+
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No products</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}
