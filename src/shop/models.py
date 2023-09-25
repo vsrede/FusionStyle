@@ -1,5 +1,6 @@
 import random
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django_countries.fields import CountryField
 from faker import Faker
@@ -77,7 +78,13 @@ class Brand(models.Model):
 
 
 class Cart(models.Model):
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    guest_session_id = models.CharField(max_length=50, null=True, blank=True)
     products = models.ManyToManyField(Product, related_name="cart")
 
     def total_price(self):

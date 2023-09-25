@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-
+    {% if products %}
     <form method="GET" class="form-inline mb-4">
         <div class="form-group mx-2">
             {{ form.search }}
@@ -24,8 +24,8 @@
         <a href="{% url 'shop:products_list_all_price_desc' %}?sort_by=price_desc" class="btn btn-link">Price High to
             Low</a>
     </div>
-
-
+    {% else %}
+    {% endif %}
     <div class="row">
         {% for product in products %}
         <div class="col-md-4">

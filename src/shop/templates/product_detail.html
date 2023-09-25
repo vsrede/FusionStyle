@@ -22,13 +22,10 @@
                 <p>Stock: No information</p>
                 {% endif %}
             </div>
-            {% if user.is_authenticated %}
             <form method="post" action="{% url 'shop:add_to_cart' product.id %}" style="margin-left: 20px">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary">Add to cart</button>
             </form>
-            {% else %}
-            {% endif %}
         </div>
     </div>
 </div>
