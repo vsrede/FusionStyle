@@ -144,7 +144,7 @@ EMAIL_HOST_PASSWORD = "pkjubgdubiyteexm"
 EMAIL_PORT = 587
 EMAIL_FAIL_SILENTLY = False
 EMAIL_REGISTRATION_SUBJECT = "Activate your LMS account"
-
+LOGIN_URL = "account:login"
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
 

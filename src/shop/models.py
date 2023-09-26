@@ -116,3 +116,15 @@ class Order(BaseModel):
 
     def __str__(self):
         return f"Order for {self.customer} - {self.get_status_display()}"
+
+
+class GuestCart(models.Model):
+    session_key = models.CharField(max_length=128, unique=True)
+    products = models.ManyToManyField(Product, through="GuestCartItem")
+    user = models.ForeignKey(get_user_model(), null=True, blank=True, on_delete=models.CASCADE)
+
+
+class GuestCartItem(models.Model):
+    cart = models.ForeignKey(GuestCart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)

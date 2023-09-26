@@ -46,8 +46,8 @@
             {% endfor %}
             <tr>
                 <td><strong>Summary</strong></td>
-                <td><strong>${{ total_price }}</td>
-                <td><strong>{{ total_items }}</td>
+                <td><strong>${{ total_price }}</strong></td>
+                <td><strong>{{ total_items }}</strong></td>
                 <td></td>
             </tr>
             </tbody>
@@ -55,7 +55,7 @@
     </div>
     <div class="text-center">
         {% if cart_items %}
-            <a href="{% url 'shop:create_order' %}" class="btn btn-success">Proceed to Checkout</a>
+        <a href="{% url 'shop:create_order' %}" class="btn btn-success">Proceed to Checkout</a>
         {% endif %}
         <a type="button" class="btn btn-secondary" href="{% url 'index' %}">Back to shopping</a>
     </div>
