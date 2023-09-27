@@ -1,10 +1,10 @@
 from django.urls import path
 
-from shop.views import (AddToCartView, CartView, CreateOrderView,
-                        OrderDetailListView, OrdersListView,
-                        ProductAllListView, ProductDetailView, ProductListView,
-                        RemoveFromCartView, UpdateCartView,
-                        generate_instances_view)
+from shop.views import (AddFavoriteView, AddToCartView, CartView,
+                        CreateOrderView, FavoriteListView, OrderDetailListView,
+                        OrdersListView, ProductAllListView, ProductDetailView,
+                        ProductListView, RemoveFromCartView, UpdateCartView,
+                        generate_instances_view, remove_favorite)
 
 app_name = "shop"
 
@@ -20,6 +20,9 @@ urlpatterns = [
     path("orders-list/<int:pk>/", OrdersListView.as_view(), name="orders-list"),
     path("orders-detail-list/<int:order_id>/", OrderDetailListView.as_view(), name="orders-detail-list"),
     path("generate-instances/", generate_instances_view, name="generate_instances"),
+    path("add/<int:product_id>/", AddFavoriteView.as_view(), name="add_favorite"),
+    path("favorite-list/", FavoriteListView.as_view(), name="favorite_list"),
+    path("remove-favorite/<int:product_id>/", remove_favorite, name="remove_favorite"),
     path(
         "products_list/price_asc/",
         ProductAllListView.as_view(),

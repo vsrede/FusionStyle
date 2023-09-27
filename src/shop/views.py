@@ -9,7 +9,8 @@ from django.views.generic import (CreateView, DetailView, ListView,
 
 from shop.forms import (OrderForm, ProductFilterForm,
                         ProductFilterWithCategoryForm)
-from shop.models import Cart, CartItem, Category, GuestCart, Order, Product
+from shop.models import (Cart, CartItem, Category, Favorite, GuestCart, Order,
+                         Product)
 from shop.tasks import generate_product_brand_category
 from shop.utils.generate_unique_session_id import generate_unique_session_id
 from shop.utils.sort_queryset_by_price import sort_queryset_by_price
@@ -236,6 +237,46 @@ class OrderDetailListView(LoginRequiredMixin, ListView):
         print(self.kwargs.get("order_id"))
         print(order.delivery_address)
         return products
+
+
+class AddFavoriteView(LoginRequiredMixin, CreateView):
+    model = Favorite
+    fields = []
+
+    def form_valid(self, form):
+        product = get_object_or_404(Product, id=self.kwargs["product_id"])
+        form.instance.user = self.request.user
+        form.instance.product = product
+        form.save()
+        print("Product added to favorites successfully!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("shop:product_detail", args=[self.kwargs["product_id"]])
+
+
+class FavoriteListView(LoginRequiredMixin, ListView):
+    model = Favorite
+    template_name = "favorites.html"
+    context_object_name = "favorites"
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Favorite.objects.filter(user=self.request.user).order_by()
+
+
+def remove_favorite(request, product_id):
+    if request.method == "POST":
+        favorites = Favorite.objects.filter(user=request.user, product_id=product_id)
+
+        if favorites.exists():
+            favorite_to_remove = favorites.first()
+            favorite_to_remove.delete()
+            return redirect("shop:favorite_list")
+        else:
+            return HttpResponse("Favorite not found", status=404)
+    else:
+        return HttpResponse("Method not allowed", status=405)
 
 
 def generate_instances_view(request):
