@@ -242,8 +242,6 @@ class OrderDetailListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         order = get_object_or_404(Order, id=self.kwargs.get("order_id"))
         products = order.products.all()
-        print(self.kwargs.get("order_id"))
-        print(order.delivery_address)
         return products
 
 
