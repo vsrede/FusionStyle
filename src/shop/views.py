@@ -206,13 +206,21 @@ class CreateOrderView(LoginRequiredMixin, CreateView):
         current_user = self.request.user
         form.instance.customer = current_user
 
-        response = super().form_valid(form)
+        if current_user.is_authenticated:
+            cart, created = Cart.objects.get_or_create(customer=current_user)
+        else:
+            guest_session_id = self.request.session.get("guest_session_id")
+            cart, created = Cart.objects.get_or_create(guest_session_id=guest_session_id)
 
-        cart_items = current_user.cart.cart_items.all()
-        self.object.products.set([item.product for item in cart_items])
+        cart_items = cart.cart_items.all()
+        form.instance.cart = cart
+        form.save()
 
-        cart_items.delete()
-        return response
+        if cart_items:
+            form.instance.products.set([item.product for item in cart_items])
+            cart_items.delete()
+
+        return super().form_valid(form)
 
 
 class OrdersListView(LoginRequiredMixin, ListView):
