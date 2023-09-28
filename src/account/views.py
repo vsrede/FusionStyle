@@ -1,12 +1,15 @@
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-from django.views.generic import CreateView, RedirectView
+from django.views.generic import (CreateView, DetailView, RedirectView,
+                                  UpdateView)
 
-from account.forms import UserRegistrationForm
+from account.forms import UserRegistrationForm, UserUpdateForm
+from account.models import Customer
 from account.utils.merge_guest_cart_with_user_cart import \
     merge_guest_cart_with_user_cart
 from core.services.emails import send_registration_email
@@ -81,3 +84,20 @@ class AccountLoginView(LoginView):
                     del self.request.session["guest_session_id"]
 
         return response
+
+
+class ProfileView(DetailView):
+    model = Customer
+    template_name = "profile.html"
+    context_object_name = "user_info"
+    queryset = Customer.objects.all()
+
+
+class UpdateUserView(LoginRequiredMixin, UpdateView):
+    model = Customer
+    template_name = "user_update.html"
+    login_url = "index"
+    form_class = UserUpdateForm
+
+    def get_success_url(self):
+        return reverse_lazy("account:profile", kwargs={"pk": self.object.pk})
