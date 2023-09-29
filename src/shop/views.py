@@ -90,6 +90,8 @@ class AddToCartView(View):
     def post(self, request, product_id):
         product = Product.objects.get(pk=product_id)
 
+        cart = None
+
         if request.user.is_authenticated:
             customer = request.user
             cart, created = Cart.objects.get_or_create(customer=customer)
@@ -111,6 +113,14 @@ class AddToCartView(View):
                 guest_session_id = generate_unique_session_id()
                 request.session["guest_session_id"] = guest_session_id
             customer = None
+
+            request.session["cart_details"] = {
+                "guest_session_id": guest_session_id,
+                "cart_items": [
+                    {"product_id": item.product.id, "quantity": item.quantity}
+                    for item in CartItem.objects.filter(cart__guest_session_id=guest_session_id)
+                ],
+            }
 
             cart, created = Cart.objects.get_or_create(customer=None, guest_session_id=guest_session_id)
 
@@ -264,7 +274,6 @@ class AddFavoriteView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         form.instance.product = product
         form.save()
-        print("Product added to favorites successfully!")
         return super().form_valid(form)
 
     def get_success_url(self):
