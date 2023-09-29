@@ -216,10 +216,15 @@ class CreateOrderView(LoginRequiredMixin, CreateView):
         form.instance.cart = cart
         form.save()
 
-        if cart_items.exists():
-            form.instance.products.set(cart_items.values_list("product", flat=True))
-            cart_items.delete()
+        # if cart_items.exists():
+        #     form.instance.products.set(cart_items.values_list("product", flat=True))
+        #     cart_items.delete()
 
+        if cart_items.exists():
+            for cart_item in cart_items:
+                OrderItem.objects.create(order=form.instance, product=cart_item.product, quantity=cart_item.quantity)
+
+            cart_items.delete()
         return super().form_valid(form)
 
 
@@ -236,15 +241,18 @@ class OrdersListView(LoginRequiredMixin, ListView):
 
 class OrderDetailListView(LoginRequiredMixin, ListView):
     template_name = "order_detail_list.html"
-    context_object_name = "products"
+    context_object_name = "order_items"
     login_url = "index"
 
     def get_queryset(self):
         order = get_object_or_404(Order, id=self.kwargs.get("order_id"))
-        products = order.products.all()
+        return order.orderitem_set.all()
 
-        print(f"Order ID: {order.id}, Products in Order: {products}")
-        return products
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order = get_object_or_404(Order, id=self.kwargs.get("order_id"))
+        context["order_items"] = order.orderitem_set.all()
+        return context
 
 
 class AddFavoriteView(LoginRequiredMixin, CreateView):

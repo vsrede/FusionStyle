@@ -123,6 +123,9 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name}"
+
 
 class GuestCart(models.Model):
     session_key = models.CharField(max_length=128, unique=True)
