@@ -118,6 +118,12 @@ class Order(BaseModel):
         return f"Order for {self.customer} - {self.get_status_display()}"
 
 
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+
 class GuestCart(models.Model):
     session_key = models.CharField(max_length=128, unique=True)
     products = models.ManyToManyField(Product, through="GuestCartItem")

@@ -10,7 +10,7 @@ from django.views.generic import (CreateView, DetailView, ListView,
 from shop.forms import (OrderForm, ProductFilterForm,
                         ProductFilterWithCategoryForm)
 from shop.models import (Cart, CartItem, Category, Favorite, GuestCart, Order,
-                         Product)
+                         OrderItem, Product)
 from shop.tasks import generate_product_brand_category
 from shop.utils.generate_unique_session_id import generate_unique_session_id
 from shop.utils.sort_queryset_by_price import sort_queryset_by_price
@@ -216,8 +216,8 @@ class CreateOrderView(LoginRequiredMixin, CreateView):
         form.instance.cart = cart
         form.save()
 
-        if cart_items:
-            form.instance.products.set([item.product for item in cart_items])
+        if cart_items.exists():
+            form.instance.products.set(cart_items.values_list("product", flat=True))
             cart_items.delete()
 
         return super().form_valid(form)
@@ -242,6 +242,8 @@ class OrderDetailListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         order = get_object_or_404(Order, id=self.kwargs.get("order_id"))
         products = order.products.all()
+
+        print(f"Order ID: {order.id}, Products in Order: {products}")
         return products
 
 
