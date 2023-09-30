@@ -12,10 +12,31 @@ services:
     volumes:
       - ./src:/fusionstyle/src
       - ./commands:/fusionstyle/commands
-      - static_content:/fusionstyle/src/static
-      - media_content:/fusionstyle/src/media
+      - static_content:/fusionstyle/src/static_content
+      - media_content:/fusionstyle/src/media_content
     env_file:
       - .env
+
+  nginx:
+    image: nginx:1.19
+    container_name: nginx_container
+    volumes:
+      - static_content:/fusionstyle/src/static
+      - media_content:/fusionstyle/src/media
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - 80:80
+      - 443:443
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+
+
+volumes:
+  static_content: { }
+  media_content: { }
 #    depends_on:
 #      - postgres
 
@@ -41,20 +62,6 @@ services:
 #    depends_on:
 #      - postgres
 
-  nginx:
-    image: nginx:1.19
-    container_name: nginx_container
-    volumes:
-      - static_content:/fusionstyle/src/static
-      - media_content:/fusionstyle/src/media
-      - ./nginx:/etc/nginx/conf.d
-    ports:
-      - 80:80
-      - 443:443
-    env_file:
-      - .env
-    depends_on:
-      - backend
 
 #  redis:
 #    image: redis
@@ -105,8 +112,6 @@ services:
 #      - redis
 #      - backend
 
-volumes:
-  static_content: { }
-  media_content: { }
+
 #  pg_data: { }
 #  pgadmin_data: { }
