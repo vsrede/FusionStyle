@@ -7,7 +7,14 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Add Google Map in Django? - Tuts-Station.com</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <style type="text/css">
+        #map {
+          height: 400px;
+        }
+    </style>
     <title>Pricing example for Bootstrap</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -113,9 +120,36 @@
             </div>
         </div>
     </div>
-    {% endblock %}
-
+    <footer class="pt-4 my-md-5 pt-md-5 border-top mb-5">
+        <div class="container mt-5">
+            <h1 class="display-4">Our location is very easy to find</h1>
+            <div id="map"></div>
+        </div>
+    </footer>
 </div>
+{% endblock %}
+
+
+<script type="text/javascript">
+    function initMap() {
+      const myLatLng = { lat: 50.44560507754334, lng: 30.575507506486083 };
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 5,
+        center: myLatLng,
+      });
+
+      new google.maps.Marker({
+        position: myLatLng,
+        map,
+        title: "Hello Rajkot!",
+      });
+    }
+
+    window.initMap = initMap;
+</script>
+
+<script type="text/javascript"
+        src="https://maps.google.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
 
 
 <!-- Bootstrap core JavaScript
@@ -143,4 +177,4 @@
         crossorigin="anonymous"></script>
 
 </body>
-</html>
+

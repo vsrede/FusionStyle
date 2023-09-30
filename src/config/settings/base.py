@@ -135,7 +135,6 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
@@ -147,6 +146,8 @@ EMAIL_REGISTRATION_SUBJECT = "Activate your LMS account"
 LOGIN_URL = "account:login"
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
+
+GOOGLE_MAPS_API_KEY = "AIzaSyDUpGx2lMjwEYW3OBcyqT5Hb24t2W5kJcU"
 
 # lmsl44224@gmail.com
 # http://127.0.0.1:8000/
