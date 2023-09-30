@@ -27,7 +27,7 @@ class Customer(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=50, blank=True, null=True, help_text="Maidan Nezalezhnosti 1")
     city = models.CharField(max_length=60, blank=True, null=True, help_text="	Kyiv")
     zipcode = models.CharField(max_length=5, blank=True, null=True, help_text="02000")
-    country = CountryField(max_length=5, blank=True, null=True, help_text="").formfield()
+    country = CountryField(blank=True, null=True, help_text="")
     preferred_currency = models.PositiveSmallIntegerField(choices=CURRENCY_VALUES.choices, default=CURRENCY_VALUES.UAH)
     is_staff = models.BooleanField(
         _("staff status"),
