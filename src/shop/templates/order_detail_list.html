@@ -4,20 +4,22 @@
 <div class="table-responsive mx-auto" style="width: 80%">
     <h2>Order Details</h2>
     <div class="table-responsive">
-        {% if products %}
+        {% if order_items %}
         <table class="table table-bordered">
             <tr style="">
                 <th scope="col">Product Name</th>
                 <th scope="col">Product Price</th>
                 <th scope="col">Product Category</th>
                 <th scope="col">Product Brand</th>
+                <th scope="col">Quantity</th>
             </tr>
-            {% for product in products %}
+            {% for order_item in order_items %}
             <tr>
-                <td>{{ product.name }}</td>
-                <td>${{ product.price }}</td>
-                <td>{{ product.category.name }}</td>
-                <td>{{ product.brand.name }}</td>
+                <td>{{ order_item.product.name }}</td>
+                <td>${{ order_item.product.price }}</td>
+                <td>{{ order_item.product.category.name }}</td>
+                <td>{{ order_item.product.brand.name }}</td>
+                <td>{{ order_item.quantity }}</td>
             </tr>
             {% endfor %}
         </table>

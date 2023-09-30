@@ -160,3 +160,5 @@ cython_debug/
 .idea/
 .pyc
 /src/shop/migrations/0001_initial.py
+/src/shop/migrations/0002_order_products.py
+/src/account/migrations/0001_initial.py

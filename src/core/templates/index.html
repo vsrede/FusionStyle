@@ -7,21 +7,38 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Add Google Map in Django? - Tuts-Station.com</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <style type="text/css">
+        #map {
+          height: 400px;
+        }
+    </style>
     <title>Pricing example for Bootstrap</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<style>
-    .row {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
-        margin-right: 1px;
-        margin-left: 1px;
-    }
-</style>
+    <style>
+        .row {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-right: 1px;
+            margin-left: 1px;
+        }
+        .menu-divider {
+            margin-left: 15px;
+            margin-right: 15px;
+            color: #888;
+        }
+        .menu-icons {
+            margin-left: 15px;
+            height: 37px;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -33,16 +50,24 @@
     </h5>
 
     <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" href="{% url 'shop:cart' %}">Cart<img src="{% static 'images/cart.jpg' %}" alt=""
+                                                                       class="menu-icons"></a>
         {% if user.is_authenticated %}
-        <a class="p-2 text-dark" href="{% url 'shop:orders-list' user.pk %}">Orders</a>
-        <a class="p-2 text-dark" href="{% url 'shop:cart' %}">Cart<img src="{% static 'images/cart.jpg' %}" alt="" height="60px"></a>
+
+        <span class="menu-divider">|</span>
+        <a class="p-2 text-dark" href="{% url 'shop:favorite_list' %}">Favorites<img
+                src="{% static 'images/favorite.jpg' %}" alt="" class="menu-icons"></a>
+        <span class="menu-divider">|</span>
+        <a class="p-2 text-dark" href="{% url 'shop:orders-list' user.pk %}">Orders<img
+                src="{% static 'images/history_orders.jpg' %}" alt="" class="menu-icons"></a>
+        <span class="menu-divider">|</span>
+        <a class="p-2 text-dark" href="{% url 'account:profile' user.pk %}">Profile<img
+                src="{% static 'images/profile_menu.jpg' %}" alt="" class="menu-icons"></a>
         <a class="btn btn-outline-primary" href="{% url 'account:logout' %}">Log out</a>
         {% else %}
-        <a class="btn btn-outline-primary" href="{% url 'account:create_account' %}">Registration</a>
         <a class="btn btn-outline-primary" href="{% url 'account:login' %}">Sign In</a>
+        {% endif %}
     </nav>
-
-    {% endif %}
 </div>
 {% block content %}
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
@@ -95,41 +120,36 @@
             </div>
         </div>
     </div>
-    {% endblock %}
-    <footer class="pt-4 my-md-5 pt-md-5 border-top">
-        <div class="row">
-            <div class="col-6 col-md">
-                <h5>Features</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Cool stuff</a></li>
-                    <li><a class="text-muted" href="#">Random feature</a></li>
-                    <li><a class="text-muted" href="#">Team feature</a></li>
-                    <li><a class="text-muted" href="#">Stuff for developers</a></li>
-                    <li><a class="text-muted" href="#">Another one</a></li>
-                    <li><a class="text-muted" href="#">Last time</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-md">
-                <h5>Resources</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Resource</a></li>
-                    <li><a class="text-muted" href="#">Resource name</a></li>
-                    <li><a class="text-muted" href="#">Another resource</a></li>
-                    <li><a class="text-muted" href="#">Final resource</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-md">
-                <h5>About</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="#">Team</a></li>
-                    <li><a class="text-muted" href="#">Locations</a></li>
-                    <li><a class="text-muted" href="#">Privacy</a></li>
-                    <li><a class="text-muted" href="#">Terms</a></li>
-                </ul>
-            </div>
+    <footer class="pt-4 my-md-5 pt-md-5 border-top mb-5">
+        <div class="container mt-5">
+            <h1 class="display-4">Our location is very easy to find</h1>
+            <div id="map"></div>
         </div>
     </footer>
 </div>
+{% endblock %}
+
+
+<script type="text/javascript">
+    function initMap() {
+      const myLatLng = { lat: 50.44560507754334, lng: 30.575507506486083 };
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 5,
+        center: myLatLng,
+      });
+
+      new google.maps.Marker({
+        position: myLatLng,
+        map,
+        title: "Hello Rajkot!",
+      });
+    }
+
+    window.initMap = initMap;
+</script>
+
+<script type="text/javascript"
+        src="https://maps.google.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
 
 
 <!-- Bootstrap core JavaScript
@@ -138,7 +158,8 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+<script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')
+</script>
 <script src="../../../../assets/js/vendor/popper.min.js"></script>
 <script src="../../../../dist/js/bootstrap.min.js"></script>
 <script src="../../../../assets/js/vendor/holder.min.js"></script>
@@ -156,4 +177,4 @@
         crossorigin="anonymous"></script>
 
 </body>
-</html>
+

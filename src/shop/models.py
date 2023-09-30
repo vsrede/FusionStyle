@@ -1,5 +1,6 @@
 import random
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django_countries.fields import CountryField
 from faker import Faker
@@ -77,7 +78,13 @@ class Brand(models.Model):
 
 
 class Cart(models.Model):
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    guest_session_id = models.CharField(max_length=50, null=True, blank=True)
     products = models.ManyToManyField(Product, related_name="cart")
 
     def total_price(self):
@@ -109,3 +116,33 @@ class Order(BaseModel):
 
     def __str__(self):
         return f"Order for {self.customer} - {self.get_status_display()}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name}"
+
+
+class GuestCart(models.Model):
+    session_key = models.CharField(max_length=128, unique=True)
+    products = models.ManyToManyField(Product, through="GuestCartItem")
+    user = models.ForeignKey(get_user_model(), null=True, blank=True, on_delete=models.CASCADE)
+
+
+class GuestCartItem(models.Model):
+    cart = models.ForeignKey(GuestCart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.product}"
