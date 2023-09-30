@@ -11,12 +11,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
-
+import os
+from dotenv import load_dotenv
 from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
+load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -147,8 +148,7 @@ LOGIN_URL = "account:login"
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
 
-GOOGLE_MAPS_API_KEY = "AIzaSyDUpGx2lMjwEYW3OBcyqT5Hb24t2W5kJcU"
-
+GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 # lmsl44224@gmail.com
 # http://127.0.0.1:8000/
 # pkjubgdubiyteexm
