@@ -2,36 +2,36 @@
 {% block content %}
 <div class="table-responsive mx-auto" style="width: 40%">
   <h2>Favorites</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Product Name</th>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Remove</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for favorite in favorites %}
+  {% if favorites %}
+    <table class="table">
+      <thead>
         <tr>
-          <td><a href="{% url 'shop:product_detail' favorite.product.id %}">{{ favorite.product.name }}</a></td>
-          <td>{{ favorite.product.title }}</td>
-          <td>{{ favorite.product.description }}</td>
-          <td>{{ favorite.product.price }}</td>
-          <td>
-            <form method="post" action="{% url 'shop:remove_favorite' favorite.product.id %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-danger">Remove from Favorites</button>
-            </form>
-          </td>
+          <th>Product Name</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Remove</th>
         </tr>
-      {% empty %}
-        <tr>
-          <td colspan="5"><em>You have no favorites yet.</em></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for favorite in favorites %}
+          <tr>
+            <td><a href="{% url 'shop:product_detail' favorite.product.id %}">{{ favorite.product.name }}</a></td>
+            <td>{{ favorite.product.title }}</td>
+            <td>{{ favorite.product.description }}</td>
+            <td>{{ favorite.product.price }}</td>
+            <td>
+              <form method="post" action="{% url 'shop:remove_favorite' favorite.product.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove from Favorites</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <td class="text-center mt-5"><em>You have no favorites yet.</em></td>
+  {% endif %}
 </div>
 {% endblock %}
