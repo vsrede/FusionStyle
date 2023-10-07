@@ -82,8 +82,6 @@
             <div class="card-body">
                 <h1 class="card-title pricing-card-title"><small class="text-muted">from</small> $299 </h1>
                 <img src="{% static 'images/laptop.png' %}" alt="" width=80% style="margin-bottom: 20px">
-                <a href="{% url 'shop:products_list' 'laptop' %}" class="btn btn-lg btn-block btn-primary">Get
-                    started</a>
 
             </div>
         </div>
@@ -94,8 +92,6 @@
             <div class="card-body">
                 <h1 class="card-title pricing-card-title"><small class="text-muted">from</small> $199 </h1>
                 <img src="{% static 'images/tablet.png' %}" alt="" width=80% style="margin-bottom: 20px">
-                <a href="{% url 'shop:products_list' 'tablet' %}" class="btn btn-lg btn-block btn-primary">Get
-                    started</a>
             </div>
         </div>
         <div class="card mb-4 box-shadow">
@@ -105,21 +101,19 @@
             <div class="card-body">
                 <h1 class="card-title pricing-card-title"><small class="text-muted">from</small> $99 </h1>
                 <img src="{% static 'images/phone.png' %}" alt="" width=80% style="margin-bottom: 20px">
-                <a href="{% url 'shop:products_list' 'phone' %}" class="btn btn-lg btn-block btn-primary">Get
-                    started</a>
             </div>
         </div>
         <div class="card mb-4 box-shadow">
             <div class="card-header">
-                <h4 class="my-0 font-weight-normal">All products</h4>
+                <h4 class="my-0 font-weight-normal">Peripherals</h4>
             </div>
             <div class="card-body">
                 <h1 class="card-title pricing-card-title"><small class="text-muted">from</small> $20 </h1>
                 <img src="{% static 'images/gadgets.png' %}" alt="" width=80% style="margin-bottom: 20px">
-                <a href="{% url 'shop:products_list_all' %}" class="btn btn-lg btn-block btn-primary">Get started</a>
             </div>
         </div>
     </div>
+    <a href="{% url 'shop:products_list_all' %}" class="btn btn-lg btn-block btn-success">Start Shopping</a>
     <footer class="pt-4 my-md-5 pt-md-5 border-top mb-5">
         <div class="container mt-5">
             <h1 class="display-4">Our location is very easy to find</h1>
@@ -149,7 +143,7 @@
 </script>
 
 <script type="text/javascript"
-        src="https://maps.google.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
+        src="https://maps.google.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&language=en"></script>
 
 
 <!-- Bootstrap core JavaScript
