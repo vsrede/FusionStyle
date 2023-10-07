@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-    {% if products %}
+
     <form method="GET" class="form-inline mb-4">
         <div class="form-group mx-2">
             {{ form.search }}
@@ -29,7 +29,7 @@
         <a href="{% url 'shop:products_list_all_price_desc' %}?{% for key, value in request.GET.items %}{% if key != 'sort_by' %}{{ key }}={{ value }}&{% endif %}{% endfor %}sort_by=price_desc"
            class="btn btn-link">Price High to Low</a>
     </div>
-
+    {% if products %}
     <div class="row">
         {% for product in products %}
         <div class="col-md-4">
@@ -62,12 +62,7 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="text-center mt-5">
-        <div class="mx-auto" style="width: 200px;">
-            <p class="mb-4">No products matching the search criteria</p>
-            <a href="{% url 'shop:products_list_all' %}" class="btn btn-primary">Back to shopping</a>
-        </div>
-    </div>
+    <p>No products matching the search criteria</p>
     {% endif %}
 </div>
 
