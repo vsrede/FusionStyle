@@ -1,49 +1,24 @@
-from django.conf import settings
+import json
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Model
+from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import (CreateView, DetailView, ListView,
                                   RedirectView, TemplateView)
 
-from shop.forms import (OrderForm, ProductFilterForm,
-                        ProductFilterWithCategoryForm)
-from shop.models import (Cart, CartItem, Category, Favorite, GuestCart, Order,
-                         OrderItem, Product)
+from shop.forms import OrderForm, ProductFilterWithCategoryForm
+from shop.models import (Cart, CartItem, Favorite, GuestCart, Order, OrderItem,
+                         Product)
 from shop.tasks import generate_product_brand_category
+from shop.utils.decimal import DecimalEncoder
 from shop.utils.generate_unique_session_id import generate_unique_session_id
 from shop.utils.sort_queryset_by_price import sort_queryset_by_price
-
-
-class ProductListView(ListView):
-    model = Product
-    template_name = "products_list.html"
-    context_object_name = "products"
-
-    def get_queryset(self):
-        product_category = self.kwargs.get("category")
-        category = get_object_or_404(Category, name=product_category)
-        queryset = Product.objects.filter(category=category)
-        form = ProductFilterForm(self.request.GET)
-        if form.is_valid():
-            search = form.cleaned_data.get("search")
-            brand = form.cleaned_data.get("brand")
-
-            if search:
-                queryset = queryset.filter(name__icontains=search)
-
-            if brand:
-                queryset = queryset.filter(brand=brand)
-        sort_by = self.request.GET.get("sort_by")
-        queryset = sort_queryset_by_price(queryset, sort_by)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["form"] = ProductFilterWithCategoryForm(self.request.GET)
-        return context
 
 
 class ProductAllListView(ListView):
@@ -73,11 +48,33 @@ class ProductAllListView(ListView):
 
         sort_by = self.request.GET.get("sort_by")
         queryset = sort_queryset_by_price(queryset, sort_by)
+
+        queryset_values = list(queryset.values())
+        queryset_values_serializable = []
+        for item in queryset_values:
+            serialized_item = {}
+            for key, value in item.items():
+                if isinstance(value, Model):
+                    serialized_item[key] = model_to_dict(
+                        value, fields=["id", "name"]
+                    )
+                elif isinstance(value, datetime):
+                    serialized_item[key] = value.strftime("%Y-%m-%dT%H:%M:%SZ")
+                else:
+                    serialized_item[key] = value
+
+            queryset_values_serializable.append(serialized_item)
+
+        serialized_data = json.dumps(queryset_values_serializable, cls=DecimalEncoder)
+
+        self.request.session["queryset_values"] = serialized_data
+
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = ProductFilterWithCategoryForm(self.request.GET)
+        context["product_category"] = self.kwargs.get("category")
         return context
 
 
@@ -226,10 +223,6 @@ class CreateOrderView(LoginRequiredMixin, CreateView):
         cart_items = cart.cart_items.all()
         form.instance.cart = cart
         form.save()
-
-        # if cart_items.exists():
-        #     form.instance.products.set(cart_items.values_list("product", flat=True))
-        #     cart_items.delete()
 
         if cart_items.exists():
             for cart_item in cart_items:

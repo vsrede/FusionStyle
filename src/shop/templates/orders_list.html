@@ -2,11 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="table-responsive mx-auto" style="width: 40%">
-    {% if orders %}
     <h2>Orders</h2>
-     {% else %}
-        <h2>No Orders</h2>
-        {% endif %}
     <div class="table-responsive">
         {% if orders %}
         <table class="table table-bordered">
@@ -28,6 +24,7 @@
             {% endfor %}
         </table>
         {% else %}
+            <td colspan="5"><em>You have no orders yet.</em></td>
         {% endif %}
     </div>
 </div>
